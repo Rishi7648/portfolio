@@ -101,7 +101,7 @@ export function About() {
                 fontFamily: "'Quicksand', sans-serif",
                 fontWeight: 700,
               }}
-              text="I'm Hem Shrestha — the founder of WildStone Solution and a WordPress developer with years of hands-on experience crafting websites that don't just look great, but perform, rank, and convert. I build business websites, portfolio sites, blogs, and fully custom solutions tailored to each client's goals. My focus is on performance, SEO, responsiveness, and a polished user experience. I treat every project as a long-term partnership — from first call to post-launch optimization — and I'm committed to delivering quality digital solutions that help businesses grow sustainably."
+              text="I'm Hem Shrestha — the founder of wildstone Solution and a WordPress developer with years of hands-on experience crafting websites that don't just look great, but perform, rank, and convert. I build business websites, portfolio sites, blogs, and fully custom solutions tailored to each client's goals. My focus is on performance, SEO, responsiveness, and a polished user experience. I treat every project as a long-term partnership — from first call to post-launch optimization — and I'm committed to delivering quality digital solutions that help businesses grow sustainably."
             />
 
             {/* Stats cards — 1 col on phones, 2 from 480px, 3 from sm up.
