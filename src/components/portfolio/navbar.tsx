@@ -21,12 +21,15 @@ export function Navbar() {
 
   // Sync active section from URL hash on first load
   React.useEffect(() => {
-    const hash = window.location.hash;
-    if (hash && VISIBLE_NAV_LINKS.some((l) => l.href === hash)) {
-      setActive(hash);
-      const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    const frame = window.requestAnimationFrame(() => {
+      const hash = window.location.hash;
+      if (hash && VISIBLE_NAV_LINKS.some((l) => l.href === hash)) {
+        setActive(hash);
+        const el = document.querySelector(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   // Active section highlighting via IntersectionObserver + URL hash sync
@@ -64,6 +67,22 @@ export function Navbar() {
     };
   }, [open]);
 
+  React.useEffect(() => {
+    const closeDesktopMenu = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("resize", closeDesktopMenu);
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      window.removeEventListener("resize", closeDesktopMenu);
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+
   const handleNav = (href: string) => {
     setOpen(false);
     setActive(href);
@@ -86,7 +105,7 @@ export function Navbar() {
             : "bg-transparent"
         )}
       >
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 overflow-hidden px-4 py-4 sm:px-6 lg:gap-4 lg:px-8">
+        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4 lg:gap-4 lg:px-8">
           {/* Catchy Name */}
           <motion.button
             type="button"
@@ -167,7 +186,7 @@ export function Navbar() {
               type="button"
               onClick={() => setOpen((o) => !o)}
               // Used !cursor-pointer to force hand cursor. Hamburger now covers up to lg (matches desktop nav breakpoint above)
-              className="inline-flex h-11 w-11 !cursor-pointer items-center justify-center rounded-full glass lg:hidden"
+              className="inline-flex h-10 w-10 !cursor-pointer items-center justify-center rounded-full glass sm:h-11 sm:w-11 lg:hidden"
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               whileHover={{ scale: 1.1 }}
@@ -199,10 +218,10 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="glass-strong fixed bottom-0 right-0 top-0 z-[80] flex h-[100dvh] w-80 max-w-[85vw] flex-col shadow-2xl ring-1 ring-primary/10 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] sm:w-96 lg:hidden"
+              className="glass-strong fixed bottom-0 right-0 top-0 z-[80] flex h-[100dvh] w-[min(20rem,calc(100vw-1rem))] flex-col overflow-x-hidden shadow-2xl ring-1 ring-primary/10 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] sm:w-96 lg:hidden"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-5">
+              <div className="flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5">
                 <span className="font-display text-xl font-extrabold tracking-tight text-foreground">
                   Menu
                 </span>
@@ -217,7 +236,7 @@ export function Navbar() {
               </div>
 
               {/* Nav links */}
-              <ul className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-2">
+              <ul className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-2 sm:px-4">
                 {VISIBLE_NAV_LINKS.map((l, i) => {
                   const isActive = active === l.href;
                   return (
@@ -234,7 +253,7 @@ export function Navbar() {
                         whileTap={{ scale: 0.97 }}
                         className={cn(
                           // Used !cursor-pointer to force hand cursor
-                          "relative flex w-full !cursor-pointer items-center overflow-hidden rounded-2xl px-5 py-4 font-display text-xl font-semibold tracking-tight transition-colors",
+                          "relative flex w-full !cursor-pointer items-center overflow-hidden rounded-2xl px-4 py-3.5 font-display text-lg font-semibold tracking-tight transition-colors sm:px-5 sm:py-4 sm:text-xl",
                           isActive
                             ? "bg-primary/10 text-foreground"
                             : "text-muted-foreground hover:bg-primary/5 hover:text-foreground"

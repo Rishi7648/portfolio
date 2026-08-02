@@ -77,9 +77,9 @@ const cardVariants = {
 
 export function Contact() {
   return (
-    <section id="contact" className="relative py-24 sm:py-32">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full gradient-blob opacity-15" />
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="contact" className="relative overflow-hidden py-16 sm:py-24 lg:py-32">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full gradient-blob opacity-15 sm:h-96 sm:w-96 md:h-[30rem] md:w-[30rem]" />
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl text-balance text-foreground">
           Get in Touch
         </h2>
@@ -110,7 +110,7 @@ export function Contact() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.3 }}
-          className="mt-10 flex flex-wrap justify-start gap-4 max-w-2xl"
+          className="mt-8 flex max-w-2xl flex-wrap justify-start gap-3 sm:mt-10 sm:gap-4"
         >
           {SOCIALS.map((s, i) => (
             <motion.a
@@ -123,7 +123,7 @@ export function Contact() {
               whileHover={{ y: -6, scale: 1.06 }}
               whileTap={{ scale: 0.94 }}
               style={{ ["--accent" as string]: s.accent } as React.CSSProperties}
-              className="wildstone-contact-card group flex w-[calc(50%-0.5rem)] sm:w-[calc(25%-0.75rem)] cursor-pointer flex-col items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 p-5 text-center transition-colors duration-300"
+              className="wildstone-contact-card group flex w-[calc(50%-0.375rem)] cursor-pointer flex-col items-center gap-3 rounded-2xl border border-border/60 bg-muted/30 p-4 text-center transition-colors duration-300 sm:w-[calc(25%-0.75rem)] sm:p-5"
             >
               <motion.div
                 animate={{ y: [0, -4, 0] }}

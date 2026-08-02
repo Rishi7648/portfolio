@@ -55,7 +55,7 @@ const SHADER_VERTICES = [-1, 1, -1, -1, 1, 1, 1, -1];
 // blob-like clumps) is driven off this single value, so scaling it down
 // slows the whole effect uniformly without touching the GLSL itself.
 // 1 = original speed. Try 0.3–0.5 for noticeably slower, dreamier motion.
-const SHADER_SPEED = 0.7;
+const SHADER_SPEED = 0.6;
 
 const SHADER_FRAGMENT_SRC = `#version 300 es
 /*********
@@ -236,7 +236,7 @@ class ShaderRenderer {
  * double-invoke since cleanup only disposes our own program/shaders,
  * never the context itself.
  */
-function useShaderBackground(containerRef: React.RefObject<HTMLElement>) {
+function useShaderBackground(containerRef: React.RefObject<HTMLElement | null>) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   // Assume visible on first paint — the hero is above the fold, and this
   // avoids a flash of no-background before the observer's first callback.
@@ -433,7 +433,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
       id="home"
       ref={heroRef}
       style={{ backgroundColor: "#ffffff" }}
-      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-white pt-24 pb-16"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-white pb-10 pt-20 sm:min-h-[100dvh] sm:pb-14 sm:pt-24 lg:pb-16"
     >
       {shaderActive && (
         <canvas
@@ -477,23 +477,23 @@ export function Hero({ startAnimation = true }: HeroProps) {
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-6 lg:grid-cols-12 lg:gap-8"
+        className="relative mx-auto grid w-full min-w-0 max-w-6xl grid-cols-1 items-center gap-5 px-4 sm:gap-6 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8"
       >
-        <div className="lg:col-span-7">
-          <div className="mt-5 overflow-hidden">
+        <div className="min-w-0 lg:col-span-7">
+          <div className="mt-3 overflow-hidden sm:mt-5">
             <motion.p
               custom={0.15}
               variants={fadeUpVariant}
               initial="hidden"
               animate={animState}
-              className="text-xl sm:text-2xl tracking-wide text-neutral-600"
+              className="text-lg tracking-wide text-neutral-600 min-[375px]:text-xl sm:text-2xl"
               style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
             >
               Hi, I&apos;m
             </motion.p>
           </div>
 
-          <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="mt-2 font-display text-4xl font-bold tracking-tight min-[375px]:text-[2.625rem] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
             <span className="block overflow-hidden pb-2">
               <motion.span
                 custom={0}
@@ -522,17 +522,17 @@ export function Hero({ startAnimation = true }: HeroProps) {
               variants={fadeUpVariant}
               initial="hidden"
               animate={animState}
-              className="flex flex-wrap items-center gap-3 text-2xl sm:text-3xl text-neutral-600"
+              className="flex flex-wrap items-start gap-2 text-lg text-neutral-600 min-[375px]:text-xl sm:items-center sm:gap-3 sm:text-2xl md:text-3xl"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 600 }}
             >
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
                 <motion.span
                   initial={{ rotate: -20, scale: 0 }}
                   animate={startAnimation ? { rotate: 0, scale: 1 } : { rotate: -20, scale: 0 }}
                   transition={{ delay: 1.05, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
                   className="inline-flex"
                 >
-                  <Sparkles className="h-5 w-5 text-blue-600" />
+                  <Sparkles className="h-4 w-4 text-blue-600 sm:h-5 sm:w-5" />
                 </motion.span>
                 {"Founder of "}
                 <a href="https://wildstonesolution.com/" target="_blank" rel="noopener noreferrer" className={wildstoneLinkClass}>WildStone Solution</a>
@@ -544,7 +544,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
             variants={taglineContainer}
             initial="hidden"
             animate={animState}
-            className="mt-6 max-w-xl text-2xl sm:text-3xl text-neutral-600 text-pretty"
+            className="mt-4 max-w-xl text-xl leading-snug text-neutral-600 text-pretty min-[375px]:text-2xl sm:mt-6 md:text-3xl"
             style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 600 }}
           >
             {taglineWords.map((word, i) => (
@@ -568,7 +568,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
           variants={imageVariants}
           initial="hidden"
           animate={animState}
-          className="relative block w-full max-w-[20rem] mx-auto mt-8 self-start justify-self-center lg:col-span-5 lg:w-full lg:max-w-[34rem] lg:justify-self-end lg:mt-0 lg:-mt-20 lg:-ml-12 xl:-mt-28 xl:-ml-16"
+          className="relative mx-auto mt-5 block w-full max-w-[17rem] self-start justify-self-center min-[375px]:max-w-[19rem] sm:mt-8 sm:max-w-[20rem] lg:col-span-5 lg:mt-0 lg:-ml-8 lg:-mt-16 lg:w-full lg:max-w-[34rem] lg:justify-self-end xl:-ml-12 xl:-mt-24"
         >
           <motion.div variants={clipVariants} initial="hidden" animate={animState}>
             <Image
@@ -577,6 +577,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
               width={800}
               height={1000}
               priority
+              sizes="(max-width: 374px) calc(100vw - 2rem), (max-width: 1023px) 20rem, (max-width: 1279px) 40vw, 34rem"
               className="w-full object-cover [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)]"
             />
           </motion.div>

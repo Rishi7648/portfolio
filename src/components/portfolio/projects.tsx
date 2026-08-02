@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Image from 'next/image';
 import {
   Building2,
   Newspaper,
@@ -176,7 +177,7 @@ export default function Portfolio() {
 
   const renderFilterButtons = () => (
     <div
-      className="flex gap-3 overflow-x-auto pb-2 px-1 scrollbar-hide max-w-full"
+      className="scrollbar-hide flex w-full max-w-full justify-start gap-2 overflow-x-auto px-1 pb-2 sm:justify-center sm:gap-3"
       style={{
         WebkitOverflowScrolling: 'touch',
         overscrollBehaviorX: 'contain',
@@ -198,7 +199,7 @@ export default function Portfolio() {
             key={filter}
             type="button"
             onClick={() => handleFilterClick(filter)}
-            className={`wildstone-filter-btn flex items-center gap-2 sm:gap-2.5 px-4 py-3 sm:px-6 sm:py-3.5 rounded-full text-sm sm:text-base md:text-[17px] font-bold whitespace-nowrap select-none border transition-all duration-300 ease-out
+            className={`wildstone-filter-btn flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2.5 text-sm font-bold whitespace-nowrap select-none transition-all duration-300 ease-out sm:gap-2.5 sm:px-5 sm:py-3 md:px-6 md:py-3.5 md:text-[17px]
               ${
                 isActive
                   ? 'bg-transparent border-[#3b82f6] text-[#3b82f6] shadow-[0_0_16px_rgba(59,130,246,0.25),0_0_4px_rgba(59,130,246,0.15)]'
@@ -262,11 +263,13 @@ export default function Portfolio() {
           {/* Project Image — height now scales with breakpoint instead of a fixed h-64,
               so mobile single-column cards don't get a disproportionately tall crop
               compared to the desktop 3-column grid */}
-          <div className="relative h-52 sm:h-56 md:h-64 overflow-hidden">
-            <img
+          <div className="relative h-48 overflow-hidden min-[375px]:h-52 sm:h-56 md:h-60 xl:h-64">
+            <Image
               src={project.image}
               alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+              fill
+              sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) calc(50vw - 2.25rem), (max-width: 1439px) calc(33vw - 2rem), 405px"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             />
 
             {/* Gradient overlay on hover */}
@@ -313,7 +316,7 @@ export default function Portfolio() {
           </div>
 
           {/* Card Content */}
-          <div className="p-5 flex items-center gap-3">
+          <div className="flex items-center gap-3 p-4 sm:p-5">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 bg-white border border-[#e5e7eb] shadow-sm"
             >
@@ -369,15 +372,15 @@ export default function Portfolio() {
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-[#8b5cf6]/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-[#06b6d4]/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headingRef} className="text-center mb-12 md:mb-16">
+        <div ref={headingRef} className="mb-8 text-center sm:mb-10 md:mb-14 lg:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-black"
+            className="text-3xl font-bold text-black sm:text-4xl lg:text-5xl"
             style={{ fontFamily: FONT_FAMILY }}
           >
             Selected Works
@@ -390,7 +393,7 @@ export default function Portfolio() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex justify-center mb-12"
+          className="mb-8 flex min-w-0 justify-start sm:mb-10 sm:justify-center lg:mb-12"
         >
           {renderFilterButtons()}
         </motion.div>
@@ -399,7 +402,7 @@ export default function Portfolio() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeFilter}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.3 } }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.25 } }}
@@ -466,7 +469,7 @@ export default function Portfolio() {
             >
               {/* Sticky header */}
               <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-[#e5e7eb]">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5">
+                <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
                   <h3
                     className="text-xl md:text-2xl font-bold text-[#1e1b4b]"
                     style={{ fontFamily: FONT_FAMILY }}
@@ -485,16 +488,16 @@ export default function Portfolio() {
                 </div>
               </div>
 
-              <div className="max-w-7xl mx-auto px-6 py-12">
+              <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
                 {/* Filters inside overlay */}
-                <div className="flex justify-center mb-12">
+                <div className="mb-8 flex min-w-0 justify-start sm:mb-10 sm:justify-center lg:mb-12">
                   {renderFilterButtons()}
                 </div>
 
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`all-${activeFilter}`}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
                     initial={{ opacity: 0 }}
                     animate={{
                       opacity: 1,

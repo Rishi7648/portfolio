@@ -89,7 +89,7 @@ function getStatImage(label: string) {
 /* ---------- About section ---------- */
 export function About() {
   return (
-    <section id="about" className="relative py-16 sm:py-24 lg:py-32">
+    <section id="about" className="relative overflow-hidden py-16 sm:py-24 lg:py-32">
       {/* px-4 on the smallest screens instead of a flat px-6 */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-12 lg:items-start lg:gap-4">
@@ -157,7 +157,7 @@ export function About() {
           <div className="lg:col-span-4">
             <div className="flex justify-center lg:sticky lg:top-24 lg:flex lg:justify-end">
               <SectionReveal direction="up" delay={0.24}>
-                <div className="relative mx-auto w-full max-w-[14rem] min-[480px]:max-w-[16rem] sm:max-w-[18rem] lg:mx-0 lg:translate-x-12">
+                <div className="relative mx-auto w-full max-w-[14rem] min-[480px]:max-w-[16rem] sm:max-w-[18rem] lg:mx-0 xl:translate-x-12">
                   <div className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-primary/20 to-amber-400/20 blur-3xl" />
                   <Globe className="opacity-90" />
                 </div>

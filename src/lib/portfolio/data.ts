@@ -20,15 +20,3 @@ export const STATS = [
   { label: "Projects Completed", value: 80, suffix: "+" },
   { label: "Happy Clients", value: 100, suffix: "+" },
 ];
-
-export type SkillItem = {
-  name: string;
-  level: number;
-};
-
-export type SkillGroup = {
-  category: string;
-  items: SkillItem[];
-};
-
-export const SKILLS: SkillGroup[] = [];

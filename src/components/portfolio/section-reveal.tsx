@@ -29,7 +29,6 @@ type SectionRevealProps = {
   delay?: number;
   duration?: number;
   once?: boolean;
-  as?: keyof JSX.IntrinsicElements;
   amount?: number;
 };
 
