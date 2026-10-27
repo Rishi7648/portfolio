@@ -433,7 +433,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
       id="home"
       ref={heroRef}
       style={{ backgroundColor: "#ffffff" }}
-      className="relative flex min-h-[100svh] items-center overflow-hidden bg-white pb-10 pt-20 sm:min-h-[100dvh] sm:pb-14 sm:pt-24 lg:pb-16"
+      className="mobile-hero-fallback relative flex min-h-[100svh] items-center overflow-hidden bg-white pb-10 pt-20 sm:min-h-[100dvh] sm:pb-14 sm:pt-24 lg:pb-16"
     >
       {shaderActive && (
         <canvas
