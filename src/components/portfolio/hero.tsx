@@ -260,14 +260,14 @@ function useShaderBackground(containerRef: React.RefObject<HTMLElement | null>) 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // The shader is decorative. Skip WebGL on phones so startup does not
+    // compete with the globe and other page animations for limited resources.
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+
     const gl = canvas.getContext("webgl2");
     if (!gl) return; // WebGL2 unsupported — quietly skip, page still looks fine without it
 
-    // Mobile devices get a lighter DPR multiplier — fewer pixels to shade
-    // keeps the fragment shader loop (12 iterations + fbm noise) smooth
-    // on lower-powered GPUs.
-    const isMobile = window.innerWidth < 768;
-    const dpr = Math.max(1, (isMobile ? 0.35 : 0.5) * window.devicePixelRatio);
+    const dpr = Math.max(1, 0.5 * window.devicePixelRatio);
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
