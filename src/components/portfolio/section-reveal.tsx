@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, type Variants } from "framer-motion";
+import { motion, useInView, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type Direction = "up" | "down" | "left" | "right" | "scale" | "fade";
@@ -38,7 +38,12 @@ export function SectionReveal({
   direction = "up",
   delay = 0,
   duration = 0.6,
+  once = true,
+  amount = 0.2,
 }: SectionRevealProps) {
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once, amount });
+
   const variants: Variants = {
     hidden: { opacity: 0, ...offset[direction] },
     show: {
@@ -56,12 +61,11 @@ export function SectionReveal({
 
   return (
     <motion.div
+      ref={ref}
       className={cn(className)}
       variants={variants}
-      // Render visible in the server HTML so the section is still readable
-      // when a browser delays or cannot hydrate client-side animations.
-      initial="show"
-      animate="show"
+      initial="hidden"
+      animate={inView ? "show" : "hidden"}
     >
       {children}
     </motion.div>
@@ -74,6 +78,8 @@ export function StaggerGroup({
   className,
   stagger = 0.08,
   delay = 0,
+  once = true,
+  amount = 0.2,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -82,6 +88,9 @@ export function StaggerGroup({
   once?: boolean;
   amount?: number;
 }) {
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once, amount });
+
   const container: Variants = {
     hidden: {},
     show: {
@@ -91,10 +100,11 @@ export function StaggerGroup({
 
   return (
     <motion.div
+      ref={ref}
       className={className}
       variants={container}
-      initial="show"
-      animate="show"
+      initial="hidden"
+      animate={inView ? "show" : "hidden"}
     >
       {children}
     </motion.div>

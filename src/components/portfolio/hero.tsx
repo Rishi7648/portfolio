@@ -260,14 +260,13 @@ function useShaderBackground(containerRef: React.RefObject<HTMLElement | null>) 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // The shader is decorative. Skip WebGL on phones so startup does not
-    // compete with the globe and other page animations for limited resources.
-    if (window.matchMedia("(max-width: 767px)").matches) return;
-
     const gl = canvas.getContext("webgl2");
     if (!gl) return; // WebGL2 unsupported — quietly skip, page still looks fine without it
 
-    const dpr = Math.max(1, 0.5 * window.devicePixelRatio);
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const dpr = isMobile
+      ? Math.max(0.75, 0.25 * window.devicePixelRatio)
+      : Math.max(1, 0.5 * window.devicePixelRatio);
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -284,8 +283,12 @@ function useShaderBackground(containerRef: React.RefObject<HTMLElement | null>) 
     resize();
 
     let frameId: number | undefined;
+    let lastRenderAt = 0;
     const loop = (now: number) => {
-      renderer.render(now);
+      if (!isMobile || now - lastRenderAt >= 1000 / 30) {
+        renderer.render(now);
+        lastRenderAt = now;
+      }
       frameId = requestAnimationFrame(loop);
     };
 
@@ -386,7 +389,11 @@ const clipVariants = {
 const wildstoneLinkClass =
   "underline decoration-green-600/40 decoration-2 underline-offset-4 transition-colors hover:text-green-600 hover:decoration-green-600";
 
-export function Hero() {
+type HeroProps = {
+  startAnimation?: boolean;
+};
+
+export function Hero({ startAnimation = true }: HeroProps) {
   const heroRef = React.useRef<HTMLDivElement | null>(null);
   const blob1 = React.useRef<HTMLDivElement | null>(null);
   const blob2 = React.useRef<HTMLDivElement | null>(null);
@@ -422,7 +429,7 @@ export function Hero() {
   );
 
   const taglineWords = PERSONAL.tagline.split(" ");
-  const animState = "show";
+  const animState = startAnimation ? "show" : "hidden";
 
   return (
     <section
@@ -480,7 +487,7 @@ export function Hero() {
             <motion.p
               custom={0.15}
               variants={fadeUpVariant}
-              initial="show"
+              initial="hidden"
               animate={animState}
               className="text-lg tracking-wide text-neutral-600 min-[375px]:text-xl sm:text-2xl"
               style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
@@ -494,7 +501,7 @@ export function Hero() {
               <motion.span
                 custom={0}
                 variants={wordVariants}
-                initial="show"
+                initial="hidden"
                 animate={animState}
                 className="inline-block bg-gradient-to-r from-neutral-950 via-neutral-800 to-neutral-950 bg-clip-text text-transparent"
               >
@@ -503,7 +510,7 @@ export function Hero() {
               <motion.span
                 custom={1}
                 variants={wordVariants}
-                initial="show"
+                initial="hidden"
                 animate={animState}
                 className="inline-block bg-gradient-to-r from-blue-600 via-neutral-950 to-neutral-950 bg-clip-text text-transparent"
               >
@@ -516,15 +523,15 @@ export function Hero() {
             <motion.div
               custom={0.85}
               variants={fadeUpVariant}
-              initial="show"
+              initial="hidden"
               animate={animState}
               className="flex flex-wrap items-start gap-2 text-lg text-neutral-600 min-[375px]:text-xl sm:items-center sm:gap-3 sm:text-2xl md:text-3xl"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 600 }}
             >
               <span className="inline-flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
                 <motion.span
-                  initial={{ rotate: 0, scale: 1 }}
-                  animate={{ rotate: 0, scale: 1 }}
+                  initial={{ rotate: -20, scale: 0 }}
+                  animate={startAnimation ? { rotate: 0, scale: 1 } : { rotate: -20, scale: 0 }}
                   transition={{ delay: 1.05, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
                   className="inline-flex"
                 >
@@ -538,7 +545,7 @@ export function Hero() {
 
           <motion.p
             variants={taglineContainer}
-            initial="show"
+            initial="hidden"
             animate={animState}
             className="mt-4 max-w-xl text-xl leading-snug text-neutral-600 text-pretty min-[375px]:text-2xl sm:mt-6 md:text-3xl"
             style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 600 }}
@@ -562,11 +569,11 @@ export function Hero() {
             instead of a value the layout could never honor. */}
         <motion.div
           variants={imageVariants}
-          initial="show"
+          initial="hidden"
           animate={animState}
           className="relative mx-auto mt-5 block w-full max-w-[17rem] self-start justify-self-center min-[375px]:max-w-[19rem] sm:mt-8 sm:max-w-[20rem] lg:col-span-5 lg:mt-0 lg:-ml-8 lg:-mt-16 lg:w-full lg:max-w-[34rem] lg:justify-self-end xl:-ml-12 xl:-mt-24"
         >
-          <motion.div variants={clipVariants} initial="show" animate={animState}>
+          <motion.div variants={clipVariants} initial="hidden" animate={animState}>
             <Image
               src="/hem.jpg"
               alt="Hem Shrestha"

@@ -107,7 +107,7 @@ export function Contact() {
             floating in the row's center. */}
         <motion.div
           variants={containerVariants}
-          initial="show"
+          initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.3 }}
           className="mt-8 flex max-w-2xl flex-wrap justify-start gap-3 sm:mt-10 sm:gap-4"
