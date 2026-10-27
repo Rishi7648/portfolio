@@ -4,10 +4,10 @@ import * as React from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 
 const NAME = "Portfolio";
-const LETTER_STAGGER = 0.28;
-const LETTER_DURATION = 0.9;
-const HOLD_AFTER = 1400;
-const ENTRANCE_DELAY = 0.6;
+const LETTER_STAGGER = 0.12;
+const LETTER_DURATION = 0.45;
+const HOLD_AFTER = 250;
+const ENTRANCE_DELAY = 0.2;
 
 const LETTER_START_DELAY = ENTRANCE_DELAY;
 const LAST_LETTER_DELAY = LETTER_START_DELAY + (NAME.length - 1) * LETTER_STAGGER;
@@ -43,16 +43,19 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       duration: COUNTDOWN_DURATION,
       delay: ENTRANCE_DELAY,
       ease: "linear",
-      onComplete: () => {
-        setTimeout(() => {
-          setPhase("done");
-          // Fire onComplete right as the curtain starts lifting, so the Hero
-          // section animates into view *as* it's revealed, not after.
-          onComplete?.();
-        }, HOLD_AFTER);
-      },
     });
-    return () => controls.stop();
+    // Dismiss on a normal timer instead of relying on the motion animation's
+    // completion callback, so the page is always revealed if that animation
+    // is interrupted or throttled by the browser.
+    const finishTimer = window.setTimeout(() => {
+      setPhase("done");
+      onComplete?.();
+    }, TOTAL_REVEAL_TIME * 1000 + HOLD_AFTER);
+
+    return () => {
+      controls.stop();
+      window.clearTimeout(finishTimer);
+    };
   }, [countMV, onComplete]);
 
   return (

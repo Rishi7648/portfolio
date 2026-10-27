@@ -15,10 +15,11 @@ import { BackToTop } from "@/components/portfolio/back-to-top";
 
 export default function Home() {
   const [loaded, setLoaded] = React.useState(false);
+  const handleLoadingComplete = React.useCallback(() => setLoaded(true), []);
 
   return (
     <>
-      <LoadingScreen onComplete={() => setLoaded(true)} />
+      <LoadingScreen onComplete={handleLoadingComplete} />
       <ScrollProgress />
       <Navbar />
       <main className="relative flex min-h-screen flex-col">

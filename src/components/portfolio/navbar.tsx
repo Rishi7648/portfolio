@@ -15,12 +15,26 @@ export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState<string>("#home");
   const [hovered, setHovered] = React.useState<string | null>(null);
+  const hasScrolled = React.useRef(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 24));
 
   // Sync active section from URL hash on first load
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
+    // The home section is the page root. Remove an initial #home fragment so
+    // the address bar does not imply a section jump while the splash screen is
+    // covering the homepage.
+    if (window.location.hash === "#home") {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}`
+      );
+      window.scrollTo(0, 0);
+      return;
+    }
+
     const frame = window.requestAnimationFrame(() => {
       const hash = window.location.hash;
       if (hash && VISIBLE_NAV_LINKS.some((l) => l.href === hash)) {
@@ -30,6 +44,30 @@ export function Navbar() {
       }
     });
     return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  // A browser's initial jump to a URL fragment also fires scroll events. Only
+  // let deliberate visitor input cause the hero to appear in the URL hash.
+  React.useEffect(() => {
+    const markUserScroll = () => {
+      hasScrolled.current = true;
+    };
+    const markKeyboardScroll = (event: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(event.key)) {
+        hasScrolled.current = true;
+      }
+    };
+
+    window.addEventListener("wheel", markUserScroll, { passive: true });
+    window.addEventListener("touchstart", markUserScroll, { passive: true });
+    window.addEventListener("pointerdown", markUserScroll, { passive: true });
+    window.addEventListener("keydown", markKeyboardScroll);
+    return () => {
+      window.removeEventListener("wheel", markUserScroll);
+      window.removeEventListener("touchstart", markUserScroll);
+      window.removeEventListener("pointerdown", markUserScroll);
+      window.removeEventListener("keydown", markKeyboardScroll);
+    };
   }, []);
 
   // Active section highlighting via IntersectionObserver + URL hash sync
@@ -48,8 +86,12 @@ export function Navbar() {
         if (visible[0]) {
           const newHash = `#${visible[0].target.id}`;
           setActive(newHash);
-          // Update the URL bar without triggering a page reload or scroll jump
-          window.history.replaceState(null, "", newHash);
+          // Keep a fresh visit at the site root while the hero is active. Add
+          // section hashes once the visitor has started scrolling or clicked
+          // a navigation link.
+          if (newHash !== "#home" || hasScrolled.current) {
+            window.history.replaceState(null, "", newHash);
+          }
         }
       },
       { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5, 1] }
@@ -86,6 +128,7 @@ export function Navbar() {
   const handleNav = (href: string) => {
     setOpen(false);
     setActive(href);
+    hasScrolled.current = true;
     // Update URL hash immediately on click (before scroll reaches the section)
     window.history.pushState(null, "", href);
     const el = document.querySelector(href);
