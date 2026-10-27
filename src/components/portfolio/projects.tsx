@@ -229,7 +229,7 @@ export default function Portfolio() {
     return (
       <motion.div
         key={project.id}
-        initial={{ opacity: 0, y: 80, scale: 0.7, filter: 'blur(12px)' }}
+        initial={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
         whileInView={{
           opacity: 1,
           y: 0,
@@ -376,7 +376,7 @@ export default function Portfolio() {
         {/* Section Header */}
         <div ref={headingRef} className="mb-8 text-center sm:mb-10 md:mb-14 lg:mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
@@ -389,7 +389,7 @@ export default function Portfolio() {
 
         {/* Filter Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 0 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -403,7 +403,7 @@ export default function Portfolio() {
           <motion.div
             key={activeFilter}
             className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1, transition: { duration: 0.3 } }}
             exit={{ opacity: 0, y: -20, transition: { duration: 0.25 } }}
           >
@@ -419,7 +419,7 @@ export default function Portfolio() {
         <div className="mt-12 flex justify-center">
           {hasMore && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 0 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}

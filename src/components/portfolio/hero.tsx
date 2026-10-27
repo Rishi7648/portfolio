@@ -386,11 +386,7 @@ const clipVariants = {
 const wildstoneLinkClass =
   "underline decoration-green-600/40 decoration-2 underline-offset-4 transition-colors hover:text-green-600 hover:decoration-green-600";
 
-type HeroProps = {
-  startAnimation?: boolean;
-};
-
-export function Hero({ startAnimation = true }: HeroProps) {
+export function Hero() {
   const heroRef = React.useRef<HTMLDivElement | null>(null);
   const blob1 = React.useRef<HTMLDivElement | null>(null);
   const blob2 = React.useRef<HTMLDivElement | null>(null);
@@ -426,14 +422,14 @@ export function Hero({ startAnimation = true }: HeroProps) {
   );
 
   const taglineWords = PERSONAL.tagline.split(" ");
-  const animState = startAnimation ? "show" : "hidden";
+  const animState = "show";
 
   return (
     <section
       id="home"
       ref={heroRef}
       style={{ backgroundColor: "#ffffff" }}
-      className="mobile-hero-fallback relative flex min-h-[100svh] items-center overflow-hidden bg-white pb-10 pt-20 sm:min-h-[100dvh] sm:pb-14 sm:pt-24 lg:pb-16"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-white pb-10 pt-20 sm:min-h-[100dvh] sm:pb-14 sm:pt-24 lg:pb-16"
     >
       {shaderActive && (
         <canvas
@@ -484,7 +480,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
             <motion.p
               custom={0.15}
               variants={fadeUpVariant}
-              initial="hidden"
+              initial="show"
               animate={animState}
               className="text-lg tracking-wide text-neutral-600 min-[375px]:text-xl sm:text-2xl"
               style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
@@ -498,7 +494,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
               <motion.span
                 custom={0}
                 variants={wordVariants}
-                initial="hidden"
+                initial="show"
                 animate={animState}
                 className="inline-block bg-gradient-to-r from-neutral-950 via-neutral-800 to-neutral-950 bg-clip-text text-transparent"
               >
@@ -507,7 +503,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
               <motion.span
                 custom={1}
                 variants={wordVariants}
-                initial="hidden"
+                initial="show"
                 animate={animState}
                 className="inline-block bg-gradient-to-r from-blue-600 via-neutral-950 to-neutral-950 bg-clip-text text-transparent"
               >
@@ -520,15 +516,15 @@ export function Hero({ startAnimation = true }: HeroProps) {
             <motion.div
               custom={0.85}
               variants={fadeUpVariant}
-              initial="hidden"
+              initial="show"
               animate={animState}
               className="flex flex-wrap items-start gap-2 text-lg text-neutral-600 min-[375px]:text-xl sm:items-center sm:gap-3 sm:text-2xl md:text-3xl"
               style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 600 }}
             >
               <span className="inline-flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
                 <motion.span
-                  initial={{ rotate: -20, scale: 0 }}
-                  animate={startAnimation ? { rotate: 0, scale: 1 } : { rotate: -20, scale: 0 }}
+                  initial={{ rotate: 0, scale: 1 }}
+                  animate={{ rotate: 0, scale: 1 }}
                   transition={{ delay: 1.05, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
                   className="inline-flex"
                 >
@@ -542,7 +538,7 @@ export function Hero({ startAnimation = true }: HeroProps) {
 
           <motion.p
             variants={taglineContainer}
-            initial="hidden"
+            initial="show"
             animate={animState}
             className="mt-4 max-w-xl text-xl leading-snug text-neutral-600 text-pretty min-[375px]:text-2xl sm:mt-6 md:text-3xl"
             style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 600 }}
@@ -566,11 +562,11 @@ export function Hero({ startAnimation = true }: HeroProps) {
             instead of a value the layout could never honor. */}
         <motion.div
           variants={imageVariants}
-          initial="hidden"
+          initial="show"
           animate={animState}
           className="relative mx-auto mt-5 block w-full max-w-[17rem] self-start justify-self-center min-[375px]:max-w-[19rem] sm:mt-8 sm:max-w-[20rem] lg:col-span-5 lg:mt-0 lg:-ml-8 lg:-mt-16 lg:w-full lg:max-w-[34rem] lg:justify-self-end xl:-ml-12 xl:-mt-24"
         >
-          <motion.div variants={clipVariants} initial="hidden" animate={animState}>
+          <motion.div variants={clipVariants} initial="show" animate={animState}>
             <Image
               src="/hem.jpg"
               alt="Hem Shrestha"

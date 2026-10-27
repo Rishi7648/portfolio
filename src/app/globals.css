@@ -373,24 +373,6 @@ select,
 }
 
 /* Reduced motion */
-@media (max-width: 767px) {
-  /* Keep mobile visitors from getting a blank screen if client hydration is
-     delayed or fails: the server-rendered hero remains visible without JS. */
-  .mobile-loading-screen {
-    display: none !important;
-  }
-
-  .mobile-hero-fallback [style*="opacity"],
-  .mobile-hero-fallback [style*="transform"],
-  .mobile-hero-fallback [style*="filter"],
-  .mobile-hero-fallback [style*="clip-path"] {
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-    clip-path: none !important;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

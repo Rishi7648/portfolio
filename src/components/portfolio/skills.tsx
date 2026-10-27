@@ -115,7 +115,7 @@ function CategoryBlock({ category, index }: { category: SkillCategory; index: nu
   return (
     <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-[190px_minmax(0,1fr)] md:gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
       <motion.div
-        initial="hidden"
+        initial="show"
         whileInView="show"
         viewport={{ once: true, amount: 0.5 }}
         variants={{
