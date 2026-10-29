@@ -68,7 +68,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           // visible viewport when a scrollbar reserves space, which conflicts
           // with `right: 0` from inset-0 and can trigger a stray horizontal
           // scrollbar on desktop-width browsers while this is mounted.
-          className="fixed inset-0 z-[100] flex h-[100dvh] items-center justify-center overflow-hidden bg-white"
+          className="fixed inset-0 z-[100] hidden h-[100dvh] items-center justify-center overflow-hidden bg-white md:flex"
           initial={{ y: 0 }}
           exit={{ y: "-100%", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }}
         >
