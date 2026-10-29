@@ -94,6 +94,8 @@ export function Globe({
     let animationId: number
     let phi = 0
     let ro: ResizeObserver | null = null
+    let viewportObserver: IntersectionObserver | null = null
+    let isInViewport = true
     // Guards init() from running after this effect instance has already
     // been cleaned up — without this, a ResizeObserver callback from a
     // stale effect run (React Strict Mode double-invoke, Fast Refresh,
@@ -126,17 +128,20 @@ export function Globe({
     function init(width: number) {
       if (cancelled || width === 0) return
       currentWidth = width
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
       try {
         globe = createGlobe(canvas, {
-          devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+          // Cap mobile GPU work; high-density phone screens otherwise render
+          // several million pixels for a decorative globe.
+          devicePixelRatio: Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 2),
           width,
           height: width,
           phi: 0,
           theta: 0.2,
           dark: 0.05,
           diffuse: 1.5,
-          mapSamples: 16000,
+          mapSamples: isMobile ? 9000 : 16000,
           mapBrightness: 8,
           baseColor: [0.98, 0.98, 1],
           markerColor: [0.3, 0.55, 0.95],
@@ -161,11 +166,13 @@ export function Globe({
 
       function frame() {
         if (cancelled) return
-        if (!isPausedRef.current) phi += speed
-        globe!.update({
-          phi: phi + phiOffsetRef.current + dragOffset.current.phi,
-          theta: 0.2 + thetaOffsetRef.current + dragOffset.current.theta,
-        })
+        if (isInViewport && !document.hidden) {
+          if (!isPausedRef.current) phi += speed
+          globe!.update({
+            phi: phi + phiOffsetRef.current + dragOffset.current.phi,
+            theta: 0.2 + thetaOffsetRef.current + dragOffset.current.theta,
+          })
+        }
         animationId = requestAnimationFrame(frame)
       }
       frame()
@@ -206,10 +213,16 @@ export function Globe({
     })
     ro.observe(canvas)
 
+    viewportObserver = new IntersectionObserver((entries) => {
+      isInViewport = entries[0]?.isIntersecting ?? true
+    }, { rootMargin: "160px" })
+    viewportObserver.observe(canvas)
+
     return () => {
       cancelled = true
       clearTimeout(resizeTimeout)
       ro?.disconnect()
+      viewportObserver?.disconnect()
       destroyGlobe()
     }
   }, [markers, arcs, speed])

@@ -129,10 +129,19 @@ export function Navbar() {
     setOpen(false);
     setActive(href);
     hasScrolled.current = true;
+    // Unlock synchronously before scrolling. Waiting for the effect below to
+    // clear overflow races iOS Safari and Messenger's in-app browser, where a
+    // scroll started while the menu is still locked is often dropped.
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
     // Update URL hash immediately on click (before scroll reaches the section)
     window.history.pushState(null, "", href);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.requestAnimationFrame(() => {
+      const el = document.querySelector<HTMLElement>(href);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    });
   };
 
   return (

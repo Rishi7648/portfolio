@@ -164,11 +164,7 @@ export default function Portfolio() {
     setActiveFilter(filter);
   };
 
-  const visitProject = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
@@ -227,8 +223,12 @@ export default function Portfolio() {
     const IconComponent = project.icon;
 
     return (
-      <motion.div
+      <motion.a
         key={project.id}
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Visit ${project.title} website`}
         initial={{ opacity: 0, y: 80, scale: 0.7, filter: 'blur(12px)' }}
         whileInView={{
           opacity: 1,
@@ -250,7 +250,6 @@ export default function Portfolio() {
           setMousePos({ x: 0, y: 0 });
         }}
         onMouseMove={handleCardMouseMove}
-        onClick={() => visitProject(project.url)}
       >
         <motion.div
           animate={{
@@ -348,7 +347,7 @@ export default function Portfolio() {
             </div>
           </div>
         </motion.div>
-      </motion.div>
+      </motion.a>
     );
   };
 
