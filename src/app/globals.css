@@ -382,25 +382,39 @@ select,
   }
 }
 
-/*
- * Mobile first-paint fallback: animation components start at opacity 0 and
- * reveal after JavaScript hydrates. Messenger's in-app browser can delay that
- * hydration on phones, so keep the actual page readable even before motion
- * observers and the intro timer run. Motion can still animate position/scale
- * into place after hydration; desktop keeps the full intro sequence above.
- */
+/* Preserve the desktop intro and reveal sequence on phones. These rules only
+   take over if mobile JavaScript has not hydrated after several seconds. */
 @media (max-width: 767px) {
-  body [style*="opacity:0"],
-  body [style*="opacity: 0"] {
+  html:not(.app-hydrated) .intro-loader [style*="opacity:0"],
+  html:not(.app-hydrated) .intro-loader [style*="opacity: 0"] {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  body [style*="clip-path"] {
-    clip-path: none !important;
-  }
-
-  body [style*="blur("] {
     filter: none !important;
+  }
+
+  html:not(.app-hydrated) body [style*="opacity:0"],
+  html:not(.app-hydrated) body [style*="opacity: 0"] {
+    animation: mobile-content-failsafe 1ms 7s steps(1, end) forwards;
+  }
+
+  html:not(.app-hydrated) .intro-loader {
+    animation: mobile-loader-failsafe 1ms 9s steps(1, end) forwards;
+  }
+}
+
+@keyframes mobile-content-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
+  }
+}
+
+@keyframes mobile-loader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 }

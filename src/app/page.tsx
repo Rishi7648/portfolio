@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <ScrollProgress />
       <Navbar />
-      <main className="mobile-content-fallback relative flex min-h-screen flex-col">
+      <main className="relative flex min-h-screen flex-col">
         <HomeIntro />
         <Ticker />
         <About />

@@ -9,6 +9,11 @@ export function HomeIntro() {
   const [loaded, setLoaded] = React.useState(false);
   const handleLoadingComplete = React.useCallback(() => setLoaded(true), []);
 
+  React.useEffect(() => {
+    document.documentElement.classList.add("app-hydrated");
+    return () => document.documentElement.classList.remove("app-hydrated");
+  }, []);
+
   return (
     <>
       <LoadingScreen onComplete={handleLoadingComplete} />
